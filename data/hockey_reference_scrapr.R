@@ -1,4 +1,5 @@
 getAndSaveNHLGames<-function(start=1918, end=2017, wait=30){
+  if (!require(XML)){return(FALSE)}
   if (start > end){
     message("Start must be less than end. Reversing values.")
     tmp <-start
@@ -34,6 +35,7 @@ getAndSaveNHLGames<-function(start=1918, end=2017, wait=30){
   
   for(i in c(start:end)){
     if (i == 2005){
+      #No season in 2004-2005. Don't try process that year.
       next
     }
     message(paste0("Working on NHL season: ",i-1,"-", i),"\r",appendLF=FALSE)
@@ -41,17 +43,19 @@ getAndSaveNHLGames<-function(start=1918, end=2017, wait=30){
     tables <- tryCatch({
       readHTMLTable(paste0("http://www.hockey-reference.com/leagues/NHL_",i,"_games.html"))
     }, warning = function(w){
-      print(w)
+      message(w)
     }, error = function(e){
-      print(e)
+      message(e)
+      ##In case download error, don't pass nothing.
       tables<-NULL
     }) 
     if (!is.null(tables)){
+      ##In case download error, don't process
       message(" Processing...","\r",appendLF=FALSE)
       n.rows <- unlist(lapply(tables, function(t) dim(t)[1]))
       regular<-tables[[which.max(n.rows)]]
       playoff<-tables[[which.min(n.rows)]]
-      message(" Saving","\r",appendLF=FALSE)
+      message(" Saving...","\r",appendLF=FALSE)
       write.csv(regular, file=paste0("./",i-1, i,".csv"))
       write.csv(playoff, file=paste0("./",i-1, i,"Playoffs.csv"))
     }
@@ -62,6 +66,7 @@ getAndSaveNHLGames<-function(start=1918, end=2017, wait=30){
 }
 
 getAndSaveWHAGames<-function(start=1973, end=1979, wait=30){
+  if (!require(XML)){return(FALSE)}
   if (start > end){
     message("Start must be less than end. Reversing values.")
     tmp <-start
@@ -88,12 +93,14 @@ getAndSaveWHAGames<-function(start=1973, end=1979, wait=30){
     tables <- tryCatch({
       readHTMLTable(paste0("http://www.hockey-reference.com/leagues/WHA_",i,"_games.html"))
     }, warning = function(w){
-      print(w)
+      message(w)
     }, error = function(e){
-      print(e)
+      message(e)
+      ##In case download error, don't pass nothing.
       tables<-NULL
     }) 
     if (!is.null(tables)){
+      ##In case download error, don't process
       message(" Processing...","\r",appendLF=FALSE)
       n.rows <- unlist(lapply(tables, function(t) dim(t)[1]))
       regular<-tables[[which.max(n.rows)]]
