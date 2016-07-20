@@ -8,7 +8,7 @@
  */
 
 // imports
-import java.util.Date;
+import java.util.Calendar;
 
 public class Game {
 
@@ -16,20 +16,20 @@ public class Game {
 	 * @param args
 	 */
 	
-	public Date gameDate = new Date();
-	public Team visitor = new Team();
-	public Team home = new Team();
-	public int visitorGoals;
-	public int homeGoals;
+	private Calendar gameDate = Calendar.getInstance();
+	private Team visitorTeam = new Team();
+	private Team homeTeam = new Team();
+	private int visitorGoals;
+	private int homeGoals;
 	/*
 	 * Options: 
 	 * "" - Regular time (default),
 	 * "OT" - Overtime (Also 2OT, 3OT, etc for extra OT periods)
 	 * "SO" - Shootout 
 	 */	
-	public String gameType = "";
-	public String notes = "";
-	public int attendance;
+	private String gameType = "";
+	private String gameNotes = "";
+	private int gameAttendance;
 	
 	/** 
 	 * @param gameDate - String date from data (will be converted)
@@ -40,17 +40,67 @@ public class Game {
 	 * @param att - int attendance from data if exists
 	 * @param gameNotes - String game notes (if exists) from data (will be converted)
 	 */
-	
-	public Game(){
+
+	public Game(String gameString) 
+	{
+		String [] gameInfo = gameString.split(",");
+		String [] dateString = gameInfo[0].split("-");
 		
+		this.gameDate.set(Integer.parseInt(dateString[0]), 
+				Integer.parseInt(dateString[1]), 
+				Integer.parseInt(dateString[2]));
+		//this.visitor = gameInfo[1];
+		this.visitorGoals = Integer.parseInt(gameInfo[2]);
+		//this.home = gameInfo[3];
+		this.homeGoals = Integer.parseInt(gameInfo[4]);
+		this.gameType = gameInfo[5];
+		this.gameAttendance = Integer.parseInt(gameInfo[6]);
+		this.gameNotes = gameInfo[8];
 	}
 	
-	public Game(String gameDate, 
-			String visitorTeam, 
-			int visitorGoals, 
-			String homeTeam, 
-			int homeGoals) {
-		
+	public Team getWinner()
+	{
+		if (visitorGoals > homeGoals)
+		{
+			return visitorTeam;
+		}
+		else if (visitorGoals == homeGoals)
+		{
+			return null;
+		}
+		else
+		{
+			return homeTeam;
+		}
+	}
+	
+	public String getGameType()
+	{
+		return gameType;
+	}
+	
+	public Calendar getGameDate()
+	{
+		return gameDate;
+	}
+	
+	public String getGameNotes()
+	{
+		return gameNotes;
 	}
 
+	public Team getHomeTeam()
+	{
+		return homeTeam;
+	}
+	
+	public Team getVisitorTeam()
+	{
+		return visitorTeam;
+	}
+	
+	public int getAttendance()
+	{
+		return gameAttendance;
+	}
 }
