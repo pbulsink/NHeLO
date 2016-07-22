@@ -46,11 +46,11 @@ getAndSaveNHLGames<-function(start=1918, end=2017, wait=30){
       message(w)
     }, error = function(e){
       message(e)
-      ##In case download error, don't pass nothing.
+      ##In case of download error, don't pass nothing.
       tables<-NULL
     }) 
     if (!is.null(tables)){
-      ##In case download error, don't process
+      ##In case of download error, don't process
       message(" Processing...","\r",appendLF=FALSE)
       n.rows <- unlist(lapply(tables, function(t) dim(t)[1]))
       regular<-tables[[which.max(n.rows)]]
@@ -96,11 +96,11 @@ getAndSaveWHAGames<-function(start=1973, end=1979, wait=30){
       message(w)
     }, error = function(e){
       message(e)
-      ##In case download error, don't pass nothing.
+      ##In case of download error, don't pass nothing.
       tables<-NULL
     }) 
     if (!is.null(tables)){
-      ##In case download error, don't process
+      ##In case of download error, don't process
       message(" Processing...","\r",appendLF=FALSE)
       n.rows <- unlist(lapply(tables, function(t) dim(t)[1]))
       regular<-tables[[which.max(n.rows)]]
